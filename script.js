@@ -8,12 +8,18 @@ const screen = document.querySelector(".screen"),
   equalBtn = document.querySelector(".eval");
 
 let previousValue = 0;
-let currentOperation = "";
+let currentOperation = "jf";
 
 buttons.addEventListener("click", (event) => {
   let buttonText = event.target.textContent;
 
-  if (buttonText === "+" || buttonText === "=" || buttonText === "-") {
+  if (
+    buttonText === "+" ||
+    buttonText === "=" ||
+    buttonText === "-" ||
+    buttonText === "x" ||
+    buttonText === "÷"
+  ) {
     return;
   } else if (event.target.tagName === "SPAN") {
     screen.append(event.target.textContent);
@@ -45,6 +51,28 @@ minusByn.addEventListener("click", () => {
   clearScreen();
 });
 
+timesBtn.addEventListener("click", () => {
+  currentOperation = "x";
+  if (previousValue === 0) {
+    previousValue = parseFloat(screen.textContent);
+  } else {
+    previousValue = previousValue * parseFloat(screen.textContent);
+  }
+
+  clearScreen();
+});
+
+devideBtn.addEventListener("click", () => {
+  currentOperation = "÷";
+  if (previousValue === 0) {
+    previousValue = parseFloat(screen.textContent);
+  } else {
+    previousValue = previousValue / parseFloat(screen.textContent);
+  }
+
+  clearScreen();
+});
+
 equalBtn.addEventListener("click", result);
 
 function result() {
@@ -52,8 +80,11 @@ function result() {
     previousValue += parseFloat(screen.textContent);
   } else if (currentOperation === "-") {
     previousValue = previousValue - parseFloat(screen.textContent);
+  } else if (currentOperation === "x") {
+    previousValue = previousValue * parseFloat(screen.textContent);
+  } else if (currentOperation === "÷") {
+    previousValue = previousValue / parseFloat(screen.textContent);
   }
-
   clearScreen();
   screen.textContent = previousValue;
 }
