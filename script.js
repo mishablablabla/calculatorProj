@@ -2,13 +2,13 @@ const screen = document.querySelector(".screen"),
   buttons = document.querySelector(".keys"),
   clearBtn = document.querySelector(".clear"),
   plusBtn = document.querySelector(".plus"),
-  minusByn = document.querySelector(".minus"),
-  devideBtn = document.querySelector(".devide"),
+  minusBtn = document.querySelector(".minus"),
+  divideBtn = document.querySelector(".devide"),
   timesBtn = document.querySelector(".times"),
   equalBtn = document.querySelector(".eval");
 
-let previousValue = 0;
-let currentOperation = "jf";
+let previousValue = null;
+let currentOperation = "";
 
 buttons.addEventListener("click", (event) => {
   let buttonText = event.target.textContent;
@@ -28,65 +28,55 @@ buttons.addEventListener("click", (event) => {
 
 clearBtn.addEventListener("click", () => {
   clearScreen();
-  previousValue = 0;
+  previousValue = null;
+  currentOperation = "";
 });
 
-plusBtn.addEventListener("click", () => {
-  currentOperation = "+";
-  previousValue += parseFloat(screen.textContent);
-  console.log(previousValue);
-
-  clearScreen();
-});
-
-minusByn.addEventListener("click", () => {
-  currentOperation = "-";
-  if (previousValue === 0) {
-    previousValue = parseFloat(screen.textContent);
-  } else {
-    previousValue = previousValue - parseFloat(screen.textContent);
-  }
-  console.log(previousValue);
-
-  clearScreen();
-});
-
-timesBtn.addEventListener("click", () => {
-  currentOperation = "x";
-  if (previousValue === 0) {
-    previousValue = parseFloat(screen.textContent);
-  } else {
-    previousValue = previousValue * parseFloat(screen.textContent);
-  }
-
-  clearScreen();
-});
-
-devideBtn.addEventListener("click", () => {
-  currentOperation = "÷";
-  if (previousValue === 0) {
-    previousValue = parseFloat(screen.textContent);
-  } else {
-    previousValue = previousValue / parseFloat(screen.textContent);
-  }
-
-  clearScreen();
-});
+plusBtn.addEventListener("click", () => setOperation("+"));
+minusBtn.addEventListener("click", () => setOperation("-"));
+timesBtn.addEventListener("click", () => setOperation("x"));
+divideBtn.addEventListener("click", () => setOperation("÷"));
 
 equalBtn.addEventListener("click", result);
 
-function result() {
-  if (currentOperation === "+") {
-    previousValue += parseFloat(screen.textContent);
-  } else if (currentOperation === "-") {
-    previousValue = previousValue - parseFloat(screen.textContent);
-  } else if (currentOperation === "x") {
-    previousValue = previousValue * parseFloat(screen.textContent);
-  } else if (currentOperation === "÷") {
-    previousValue = previousValue / parseFloat(screen.textContent);
+function setOperation(operation) {
+  currentOperation = operation;
+  if (screen.textContent !== "") {
+    previousValue = parseFloat(screen.textContent);
+    clearScreen();
   }
-  clearScreen();
+}
+
+function result() {
+  const screenValue = parseFloat(screen.textContent);
+
+  if (isNaN(screenValue)) {
+    return;
+  }
+
+  switch (currentOperation) {
+    case "+":
+      previousValue += screenValue;
+      break;
+    case "-":
+      previousValue -= screenValue;
+      break;
+    case "x":
+      previousValue *= screenValue;
+      break;
+    case "÷":
+      if (screenValue === 0) {
+        screen.textContent = "Error <33";
+        previousValue = null;
+        currentOperation = "";
+        return;
+      }
+      previousValue /= screenValue;
+      break;
+  }
+
   screen.textContent = previousValue;
+  currentOperation = "";
 }
 
 function clearScreen() {
