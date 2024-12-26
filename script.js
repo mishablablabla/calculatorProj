@@ -11,6 +11,30 @@ let previousValue = null,
   currentOperation = "",
   finishResult = false;
 
+document.addEventListener("keydown", (event) => {
+  if (finishResult) {
+    clearScreen();
+    finishResult = false;
+  }
+
+  switch (event.key) {
+    case "Backspace":
+      screen.textContent = screen.textContent.slice(0, -1);
+      break;
+    case "Enter":
+      result();
+      break;
+    case "Escape":
+      clearScreen();
+      break;
+    default:
+      if (!isNaN(event.key)) {
+        screen.textContent += event.key;
+      }
+      break;
+  }
+});
+
 buttons.addEventListener("click", (event) => {
   let buttonText = event.target.textContent;
 
