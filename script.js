@@ -7,29 +7,36 @@ const screen = document.querySelector(".screen"),
   timesBtn = document.querySelector(".times"),
   equalBtn = document.querySelector(".eval");
 
-let previousValue = null;
-let currentOperation = "";
+let previousValue = null,
+  currentOperation = "",
+  finishResult = false;
 
 buttons.addEventListener("click", (event) => {
   let buttonText = event.target.textContent;
 
-  if (
-    buttonText === "+" ||
-    buttonText === "=" ||
-    buttonText === "-" ||
-    buttonText === "x" ||
-    buttonText === "÷"
-  ) {
+  if (finishResult) {
     return;
-  } else if (event.target.tagName === "SPAN") {
-    screen.append(event.target.textContent);
+  } else {
+    if (
+      buttonText === "+" ||
+      buttonText === "=" ||
+      buttonText === "-" ||
+      buttonText === "x" ||
+      buttonText === "÷"
+    ) {
+      return;
+    } else if (event.target.tagName === "SPAN") {
+      screen.append(event.target.textContent);
+    }
   }
 });
 
 clearBtn.addEventListener("click", () => {
   clearScreen();
+
   previousValue = null;
   currentOperation = "";
+  finishResult = false;
 });
 
 plusBtn.addEventListener("click", () => setOperation("+"));
@@ -71,12 +78,14 @@ function result() {
         currentOperation = "";
         return;
       }
+
       previousValue /= screenValue;
       break;
   }
 
   screen.textContent = previousValue;
   currentOperation = "";
+  finishResult = true;
 }
 
 function clearScreen() {
